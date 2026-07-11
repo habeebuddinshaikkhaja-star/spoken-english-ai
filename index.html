@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Spoken English AI - A for Apple</title>
+  <style>
+    body { font-family: Arial; text-align: center; padding: 50px; background: #f0f8ff; }
+.card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+    h1 { color: #2c3e50; }
+.word { font-size: 40px; color: #e74c3c; margin: 20px 0; }
+.tip { font-size: 18px; color: #27ae60; font-style: italic; }
+    button { padding: 12px 25px; font-size: 16px; background: #3498db; color: white; border: none; border-radius: 8px; cursor: pointer; margin: 10px; }
+    button:hover { background: #2980b9; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Spoken English AI 🗣️</h1>
+   <img src= "https://image.pollinations.ai/prompt/A%20for%20Apple%20cartoon" width="200" alt="Apple">
+    <div class="word">A for Apple 🍎</div>
+    <div class="tip">Teacher Tip: "Apple" bolte waqt 'ae' ki sound nikalti hai. Jaise 'ael'</div>
+    <br>
+    <button onclick="speak()">🔊 Pronunciation Suno</button>
+    <button onclick="startRecording()">🎤 Repeat Karo</button>
+    <p id="result" style="font-size: 20px; font-weight: bold;"></p>
+  </div>
+
+  <script>
+    function speak() {
+      const msg = new SpeechSynthesisUtterance("A for Apple. Repeat after me: Apple");
+      msg.lang = "en-US";
+      window.speechSynthesis.speak(msg);
+    }
+    function startRecording() {
+      const recognition = new webkitSpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.onresult = function(event) {
+        const result = event.results[0][0].transcript.toLowerCase();
+        if(result.includes("apple")) {
+          document.getElementById("result").innerText = "Excellent! 100% ✅";
+        } else {
+          document.getElementById("result").innerText = "Try again. Say Aaa-pple ❌";
+        }
+      };
+      recognition.start();
+    }
+  </script>
+</body>
+</html>
