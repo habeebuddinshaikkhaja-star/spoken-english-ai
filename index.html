@@ -51,6 +51,11 @@
       recognition.onresult = function(event) {
         const result = event.results[0][0].transcript.toLowerCase();
         if(result.includes("apple")) 
+          if(result.includes("apple"))
+    document.getElementById("result").innerText = "Excellent! 100% ✅";
+} else {
+    document.getElementById("result").innerText = "Try again. Say Aaa-pple ❌";
+}
           document.getElementById("result").innerText = "Excellent! 100% ✅";
         } else {
           document.getElementById("result").innerText = "Try again. Say Aaa-pple ❌";
