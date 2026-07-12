@@ -60,18 +60,22 @@ function speak(text) {
   speech.lang = 'en-US';
   speech.rate = 0.8;
   window.speechSynthesis.speak(speech);
-}
-</script>
-</body>
-</html> 
  }
-
- // Next button click
- function speakNext() {
- currentIndex = currentIndex + 1;
- if(currentIndex < sentences.length){
+ 
+ function selectLesson(lesson) {
+ currentLesson = lesson;
+ currentIndex = 0;
  document.getElementById("progress").innerText = `Sentence ${currentIndex + 1} of 5`;
-document.getElementById("sentence").innerText = sentences[currentIndex];
- speakText(sentences[currentIndex]);
+ document.getElementById("result").innerText = lessons[lesson][currentIndex];
+ speak(lessons[lesson][currentIndex]);
  }
-   }
+ 
+ const lessons = {
+ atoz: ["A for Apple", "B for Ball", "C for Cat", "D for Dog", "E for Elephant"],
+ questions: ["What is your name?", "Where do you live?", "How are you?", "What do you do?", "Are you busy?"],
+ grammar: ["She don't like apples", "I am go to market", "He have two car", "They is playing cricket", "We was late yesterday"],
+ leave: ["I am sick today", "Please grant me leave", "I have fever", "I will come tomorrow", "Thank you sir"]
+ };
+ </script>
+ </body>
+ </html>
