@@ -1,81 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My English Teacher AI</title>
+<title>AI English Teacher - Girl Voice</title>
 <style>
-body { font-family: Arial; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-align: center; padding: 20px; }
-button { padding: 12px 20px; margin: 5px; border: none; border-radius: 20px; background: #4CAF50; color: white; cursor: pointer; font-size: 16px; }
-button:hover { background: #45a049; }
-#result { background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; margin: 20px; font-size: 18px; }
-.orange { background: #ff5722!important; }
+body{background:linear-gradient(135deg,#667eea,#764ba2);color:white;text-align:center;font-family:Arial;padding:20px}
+h1{margin-bottom:10px}
+button{padding:12px 18px;margin:6px;border:none;border-radius:25px;background:#4CAF50;color:white;font-size:15px;cursor:pointer;font-weight:bold}
+button:hover{background:#45a049}
+.orange{background:#ff5722!important}
+#result{background:rgba(255,255,255,0.2);padding:25px;border-radius:15px;margin:20px auto;max-width:600px;font-size:22px;min-height:60px}
+#progress{font-size:16px;margin-bottom:10px}
 </style>
 </head>
 <body>
 
-<h1>🤖 My English Teacher AI</h1>
-<p>Tumhari Personal English Teacher</p>
+<h1>🤖 AI English Teacher</h1>
+<p>Tumhari Personal Girl Teacher 💁‍♀️</p>
 
 <button onclick="selectLesson('atoz')">1. A to Z</button>
-<button onclick="selectLesson('questions')">2. Questions</button>
-<button onclick="selectLesson('grammar')">3. Grammar</button>
+<button onclick="selectLesson('grammar')">2. Grammar</button>
+<button onclick="selectLesson('correction')">3. Sentence Correction</button>
 <button onclick="selectLesson('leave')">4. Leave Letter</button>
+<button onclick="selectLesson('office')">5. Office Letter</button>
+<button onclick="selectLesson('interview')">6. Interview</button>
+<button onclick="selectLesson('spoken')">7. Spoken English</button>
 
-<div id="result">Menu se koi lesson chuno 👇</div>
-<div id="progress"></div>
+<div id="progress">Menu se koi lesson chuno 👇</div>
+<div id="result">Welcome! Choose any lesson</div>
 
-<button class="orange" onclick="speak(lessons[currentLesson][currentIndex])">🔊 Speak Now</button>
-<button class="orange" onclick="nextSentence()">🔁 Repeat</button>
+<button class="orange" onclick="speakNow()">🔊 Speak Now</button>
+<button class="orange" onclick="next()">➡️ Next</button>
 
 <script>
-let currentLesson = "";
-let currentIndex = 0;
+let currentLesson="atoz";
+let currentIndex=0;
+let voices=[];
 
-const lessons = {
-atoz: ["A for Apple", "B for Ball", "C for Cat", "D for Dog", "E for Elephant"],
-questions: ["What is your name?", "Where do you live?", "How are you?", "What do you do?", "Are you busy?"],
-grammar: ["She don't like apples", "I am go to market", "He have two car", "They is playing cricket", "We was late yesterday"],
-leave: ["I am sick today", "Please grant me leave", "I have fever", "I will come tomorrow", "Thank you sir"]
+function loadVoices(){voices=window.speechSynthesis.getVoices();}
+loadVoices();
+window.speechSynthesis.onvoiceschanged=loadVoices;
+
+const lessons={
+atoz:["A for Apple","B for Ball","C for Cat","D for Dog","E for Elephant","F for Fish","G for Goat","H for Hen","I for Ice","J for Jug","K for Kite","L for Lion","M for Mango","N for Nest","O for Orange","P for Parrot","Q for Queen","R for Rat","S for Sun","T for Tiger","U for Umbrella","V for Van","W for Watch","X for Xylophone","Y for Yacht","Z for Zebra"],
+grammar:["She don't like apples. Correct: She doesn't like apples.","I am go to market. Correct: I am going to market.","He have two car. Correct: He has two cars.","They is playing cricket. Correct: They are playing cricket.","We was late yesterday. Correct: We were late yesterday."],
+correction:["I am agree with you. Correct: I agree with you.","What is your good name? Correct: What is your name?","Give me one advice. Correct: Give me some advice.","He is knowing me. Correct: He knows me.","I have many homeworks. Correct: I have a lot of homework."],
+leave:["Respected Sir, I am sick today. Please grant me leave for 1 day. Thank you.","Dear Sir, I have a fever. Kindly give me leave for tomorrow.","Respected Madam, I need to go to my village. Please approve my leave.","Sir, I have an urgent work. Please grant me 2 days leave.","Thank you for approving my leave. I will join tomorrow."],
+office:["Dear Sir, Please find attached the report for your review.","Respected Manager, I am sending the monthly sales data.","Sir, Meeting is scheduled for tomorrow at 10 AM.","Madam, Please approve my travel request.","Thank you for your support. Looking forward to your reply."],
+interview:["Tell me about yourself. I am a hardworking and dedicated person.","What are your strengths? My strength is I learn quickly.","Why should we hire you? Because I can give 100 percent to this job.","What are your weaknesses? I am a perfectionist.","Do you have any questions? Yes sir, What is the growth in this company?"],
+spoken:["How are you? I am fine, thank you. And you?","What is your name? My name is Raj.","Where do you live? I live in Hyderabad.","What do you do? I am a student.","Are you busy? No, I am free now."]
 };
 
-function selectLesson(lesson) {
-  currentLesson = lesson;
-  currentIndex = 0;
-  document.getElementById("progress").innerText = `Sentence ${currentIndex + 1} of 5`;
-  document.getElementById("result").innerText = lessons[lesson][currentIndex];
-  speak(lessons[lesson][currentIndex]);
+function selectLesson(lesson){
+currentLesson=lesson;
+currentIndex=0;
+document.getElementById("progress").innerText="Sentence "+(currentIndex+1)+" of "+lessons[lesson].length;
+document.getElementById("result").innerText=lessons[lesson][currentIndex];
+speakNow();
 }
 
-function nextSentence() {
-  currentIndex++;
-  if(currentIndex >= 5) currentIndex = 0;
-  document.getElementById("progress").innerText = `Sentence ${currentIndex + 1} of 5`;
-  document.getElementById("result").innerText = lessons[currentLesson][currentIndex];
-  speak(lessons[currentLesson][currentIndex]);
+function next(){
+currentIndex++;
+if(currentIndex>=lessons[currentLesson].length)currentIndex=0;
+document.getElementById("progress").innerText="Sentence "+(currentIndex+1)+" of "+lessons[currentLesson].length;
+document.getElementById("result").innerText=lessons[currentLesson][currentIndex];
+speakNow();
 }
 
-function speak(text) {
-  const speech = new SpeechSynthesisUtterance(text);
-  speech.lang = 'en-US';
-  speech.rate = 0.8;
-  window.speechSynthesis.speak(speech);
- }
- 
- function selectLesson(lesson) {
- currentLesson = lesson;
- currentIndex = 0;
- document.getElementById("progress").innerText = `Sentence ${currentIndex + 1} of 5`;
- document.getElementById("result").innerText = lessons[lesson][currentIndex];
- speak(lessons[lesson][currentIndex]);
- }
- 
- const lessons = {
- atoz: ["A for Apple", "B for Ball", "C for Cat", "D for Dog", "E for Elephant"],
- questions: ["What is your name?", "Where do you live?", "How are you?", "What do you do?", "Are you busy?"],
- grammar: ["She don't like apples", "I am go to market", "He have two car", "They is playing cricket", "We was late yesterday"],
- leave: ["I am sick today", "Please grant me leave", "I have fever", "I will come tomorrow", "Thank you sir"]
- };
- </script>
- </body>
- </html>
+function speakNow(){
+let text=lessons[currentLesson][currentIndex];
+let speech=new SpeechSynthesisUtterance(text);
+speech.lang="en-US";
+speech.pitch=1.4; // Girl voice
+speech.rate=0.9;
+
+// Girl voice force karega
+let girlVoice=voices.find(v=>v.name.includes("Female")||v.name.includes("Google US English Female")||v.name.includes("Samantha"));
+if(girlVoice)speech.voice=girlVoice;
+
+window.speechSynthesis.speak(speech);
+}
+</script>
+
+</body>
+</html>
