@@ -1,35 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>AI English Teacher - Girl Voice</title>
+<title>AI English Teacher - Auto Speak</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body{background:linear-gradient(135deg,#667eea,#764ba2);color:white;text-align:center;font-family:Arial;padding:20px}
-h1{margin-bottom:10px}
-button{padding:12px 18px;margin:6px;border:none;border-radius:25px;background:#4CAF50;color:white;font-size:15px;cursor:pointer;font-weight:bold}
-button:hover{background:#45a049}
+body{background:linear-gradient(135deg,#667eea,#764ba2);color:white;text-align:center;font-family:Arial;padding:15px;margin:0}
+h1{margin-bottom:5px;font-size:24px}
+p{margin-top:0;margin-bottom:15px}
+button{padding:12px 16px;margin:6px;border:none;border-radius:20px;background:#4CAF50;color:white;font-size:15px;cursor:pointer;font-weight:bold;transition:0.2s}
+button:hover{background:#45a049;transform:scale(1.05)}
 .orange{background:#ff5722!important}
-#result{background:rgba(255,255,255,0.2);padding:25px;border-radius:15px;margin:20px auto;max-width:600px;font-size:22px;min-height:60px}
-#progress{font-size:16px;margin-bottom:10px}
+.purple{background:#9C27B0!important}
+#result{background:rgba(255,255,255,0.25);padding:20px;border-radius:15px;margin:15px auto;max-width:650px;font-size:22px;min-height:70px;display:flex;align-items:center;justify-content:center}
+#progress{font-size:15px;margin-bottom:10px;font-weight:bold}
+.row{display:flex;flex-wrap:wrap;justify-content:center}
 </style>
 </head>
 <body>
 
 <h1>🤖 AI English Teacher</h1>
-<p>Tumhari Personal Girl Teacher 💁‍♀️</p>
+<p>Tumhari Personal Lady Teacher 💁‍♀️</p>
 
-<button onclick="selectLesson('atoz')">1. A to Z</button>
-<button onclick="selectLesson('grammar')">2. Grammar</button>
-<button onclick="selectLesson('correction')">3. Sentence Correction</button>
-<button onclick="selectLesson('leave')">4. Leave Letter</button>
-<button onclick="selectLesson('office')">5. Office Letter</button>
-<button onclick="selectLesson('interview')">6. Interview</button>
-<button onclick="selectLesson('spoken')">7. Spoken English</button>
+<div class="row">
+<button onclick="playLesson('intro')">Introduction</button>
+<button onclick="playLesson('capital')">Capital A-Z</button>
+<button onclick="playLesson('small')">Small a-z</button>
+</div>
 
-<div id="progress">Menu se koi lesson chuno 👇</div>
+<div class="row">
+<button onclick="playLesson('vowels')">Vowels</button>
+<button onclick="playLesson('consonants')">Consonants</button>
+<button onclick="playLesson('articles')">Articles</button>
+</div>
+
+<div class="row">
+<button class="purple" onclick="playLesson('pos')">Parts of Speech</button>
+<button class="purple" onclick="playLesson('tenses')">Tenses</button>
+<button class="purple" onclick="playLesson('sentences')">Sentence Making</button>
+</div>
+
+<div id="progress">Koi bhi button press karo 👇</div>
 <div id="result">Welcome! Choose any lesson</div>
 
-<button class="orange" onclick="speakNow()">🔊 Speak Now</button>
 <button class="orange" onclick="next()">➡️ Next</button>
+<button class="orange" onclick="stopSpeak()">⏹️ Stop</button>
 
 <script>
 let currentLesson=null;
@@ -41,22 +55,24 @@ loadVoices();
 window.speechSynthesis.onvoiceschanged=loadVoices;
 
 const lessons={
-atoz:["A for Apple","B for Ball","C for Cat","D for Dog","E for Elephant","F for Fish","G for Goat","H for Hen","I for Ice","J for Jug","K for Kite","L for Lion","M for Mango","N for Nest","O for Orange","P for Parrot","Q for Queen","R for Rat","S for Sun","T for Tiger","U for Umbrella","V for Van","W for Watch","X for Xylophone","Y for Yacht","Z for Zebra"],
-grammar:["She don't like apples. Correct: She doesn't like apples.","I am go to market. Correct: I am going to market.","He have two car. Correct: He has two cars.","They is playing cricket. Correct: They are playing cricket.","We was late yesterday. Correct: We were late yesterday."],
-correction:["I am agree with you. Correct: I agree with you.","What is your good name? Correct: What is your name?","Give me one advice. Correct: Give me some advice.","He is knowing me. Correct: He knows me.","I have many homeworks. Correct: I have a lot of homework."],
-leave:["Respected Sir, I am sick today. Please grant me leave for 1 day. Thank you.","Dear Sir, I have a fever. Kindly give me leave for tomorrow.","Respected Madam, I need to go to my village. Please approve my leave.","Sir, I have an urgent work. Please grant me 2 days leave.","Thank you for approving my leave. I will join tomorrow."],
-office:["Dear Sir, Please find attached the report for your review.","Respected Manager, I am sending the monthly sales data.","Sir, Meeting is scheduled for tomorrow at 10 AM.","Madam, Please approve my travel request.","Thank you for your support. Looking forward to your reply."],
-interview:["Tell me about yourself. I am a hardworking and dedicated person.","What are your strengths? My strength is I learn quickly.","Why should we hire you? Because I can give 100 percent to this job.","What are your weaknesses? I am a perfectionist.","Do you have any questions? Yes sir, What is the growth in this company?"],
-spoken:["How are you? I am fine, thank you. And you?","What is your name? My name is Raj.","Where do you live? I live in Hyderabad.","What do you do? I am a student.","Are you busy? No, I am free now."]
+intro:["Introduction: There are 26 alphabets. They are 2 types of alphabets. 1) Capital letters. 2) Small letters."],
+capital:["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
+small:["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"],
+vowels:["Vowels: They are 5 vowels. A, E, I, O, U"],
+consonants:["Consonants: They are 21 consonants. B, C, D, F, G, H, J, K, L, M, N, P, Q, R, S, T, V, W, X, Y, Z"],
+articles:["Articles: They are 3 articles. A, An, The"],
+pos:["Parts of Speech: There are 8 parts of speech. Noun, Pronoun, Verb, Adjective, Adverb, Preposition, Conjunction, Interjection"],
+tenses:["Tenses: There are 3 main tenses. Present Tense, Past Tense, Future Tense"],
+sentences:["Sentence Making: I am going to school.","She is reading a book.","They will play cricket tomorrow.","We ate dinner yesterday.","He can speak English."]
 };
 
-function selectLesson(lesson){
-window.speechSynthesis.cancel(); // pehle wali awaz band
+function playLesson(lesson){
+window.speechSynthesis.cancel();
 currentLesson=lesson;
 currentIndex=0;
-document.getElementById("progress").innerText="Sentence "+(currentIndex+1)+" of "+lessons[lesson].length;
+document.getElementById("progress").innerText="Item "+(currentIndex+1)+" of "+lessons[lesson].length;
 document.getElementById("result").innerText=lessons[lesson][currentIndex];
-// yaha auto speak nahi hoga ab
+speakNow();
 }
 
 function next(){
@@ -64,22 +80,25 @@ if(currentLesson==null){alert("Pehle koi lesson chuno");return;}
 window.speechSynthesis.cancel();
 currentIndex++;
 if(currentIndex>=lessons[currentLesson].length)currentIndex=0;
-document.getElementById("progress").innerText="Sentence "+(currentIndex+1)+" of "+lessons[currentLesson].length;
+document.getElementById("progress").innerText="Item "+(currentIndex+1)+" of "+lessons[currentLesson].length;
 document.getElementById("result").innerText=lessons[currentLesson][currentIndex];
 speakNow();
 }
 
 function speakNow(){
-if(currentLesson==null){alert("Pehle koi lesson chuno");return;}
-window.speechSynthesis.cancel(); // double awaz rokne ke liye
+if(currentLesson==null)return;
 let text=lessons[currentLesson][currentIndex];
 let speech=new SpeechSynthesisUtterance(text);
 speech.lang="en-US";
-speech.pitch=1.4; // Girl voice
+speech.pitch=1.5; // Lady voice
 speech.rate=0.9;
-let girlVoice=voices.find(v=>v.name.includes("Female")||v.name.includes("Google US English Female")||v.name.includes("Samantha"));
+let girlVoice=voices.find(v=>v.name.includes("Female")||v.name.includes("Google US English Female")||v.name.includes("Samantha")||v.name.includes("Zira"));
 if(girlVoice)speech.voice=girlVoice;
 window.speechSynthesis.speak(speech);
+}
+
+function stopSpeak(){
+window.speechSynthesis.cancel();
 }
 </script>
 
