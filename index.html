@@ -32,7 +32,7 @@ button:hover{background:#45a049}
 <button class="orange" onclick="next()">➡️ Next</button>
 
 <script>
-let currentLesson="atoz";
+let currentLesson=null;
 let currentIndex=0;
 let voices=[];
 
@@ -51,14 +51,17 @@ spoken:["How are you? I am fine, thank you. And you?","What is your name? My nam
 };
 
 function selectLesson(lesson){
+window.speechSynthesis.cancel(); // pehle wali awaz band
 currentLesson=lesson;
 currentIndex=0;
 document.getElementById("progress").innerText="Sentence "+(currentIndex+1)+" of "+lessons[lesson].length;
 document.getElementById("result").innerText=lessons[lesson][currentIndex];
-speakNow();
+// yaha auto speak nahi hoga ab
 }
 
 function next(){
+if(currentLesson==null){alert("Pehle koi lesson chuno");return;}
+window.speechSynthesis.cancel();
 currentIndex++;
 if(currentIndex>=lessons[currentLesson].length)currentIndex=0;
 document.getElementById("progress").innerText="Sentence "+(currentIndex+1)+" of "+lessons[currentLesson].length;
@@ -67,16 +70,15 @@ speakNow();
 }
 
 function speakNow(){
+if(currentLesson==null){alert("Pehle koi lesson chuno");return;}
+window.speechSynthesis.cancel(); // double awaz rokne ke liye
 let text=lessons[currentLesson][currentIndex];
 let speech=new SpeechSynthesisUtterance(text);
 speech.lang="en-US";
 speech.pitch=1.4; // Girl voice
 speech.rate=0.9;
-
-// Girl voice force karega
 let girlVoice=voices.find(v=>v.name.includes("Female")||v.name.includes("Google US English Female")||v.name.includes("Samantha"));
 if(girlVoice)speech.voice=girlVoice;
-
 window.speechSynthesis.speak(speech);
 }
 </script>
