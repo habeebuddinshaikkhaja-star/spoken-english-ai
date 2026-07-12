@@ -238,10 +238,10 @@ function selectLesson(lesson) {
 </script>
 </body>
 </html>
-let currentIndex = 0;
-
-function selectLesson(lesson) {
-  currentLesson = lesson;
+241 document.getElementById("progress").innerText = `Sentence ${currentIndex + 1} of 5`;
+242 document.getElementById("sentence").innerText = sentences[currentIndex];
+243 speakText(sentences[currentIndex]);
+244 }
   currentIndex = 0;
   document.getElementById("progress").innerText = `Sentence ${currentIndex + 1} of 5`;
   document.getElementById("result").innerText = lessons[lesson][currentIndex];
