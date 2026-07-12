@@ -189,7 +189,11 @@ function checkAnswer(result) {
                 setTimeout(() => {
                     speak("Next. Find mistake. " + grammar[currentIndex].wrong);
                     document.getElementById("result").innerText = "Find mistake: " + grammar[currentIndex].wrong;
-                    document.getElementById("progress").innerText = `Sentence ${currentIndex + 1} of 5`;
+                document.getElementById("progress").innerText = `Sentence ${currentIndex + 1} of 5`;
+
+
+// Sahi:
+ 
                 }, 2000);
             } else {
                 speak("Well done! Grammar completed.");
