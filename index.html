@@ -1,72 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Spoken English AI - A for Apple</title>
-  <style>
-    body { font-family: Arial; text-align: center; padding: 50px; background: #f0f8ff; }
-.card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
-    h1 { color: #2c3e50; }
-.word { font-size: 40px; color: #e74c3c; margin: 20px 0; }
-.tip { font-size: 18px; color: #27ae60; font-style: italic; }
-    button { padding: 12px 25px; font-size: 16px; background: #3498db; color: white; border: none; border-radius: 8px; cursor: pointer; margin: 10px; }
-    button:hover { background: #2980b9; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My English Teacher AI</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        min-height: 100vh;
+    }
+    h1 { margin-top: 20px; }
+    #result {
+        font-size: 20px;
+        margin: 20px;
+        padding: 20px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 15px;
+        min-height: 60px;
+    }
+    button {
+        font-size: 18px;
+        padding: 12px 30px;
+        border: none;
+        border-radius: 50px;
+        background: #ff6b6b;
+        color: white;
+        cursor: pointer;
+        margin: 5px;
+    }
+    button:hover { background: #ff5252; }
+   .menu button { background: #4CAF50; }
+   .menu button:hover { background: #45a049; }
+  .progress { font-size: 16px; margin: 10px; }
+</style>
 </head>
 <body>
-  <div class="card">
-    <h1>Spoken English AI 🗣️</h1>
-   <img src= "https://image.pollinations.ai/prompt/A%20for%20Apple%20cartoon" width="200" alt="Apple">
-    <div class="word">A for Apple 🍎</div>
-    <div class="tip">Teacher Tip: "Apple" bolte waqt 'ae' ki sound nikalti hai. Jaise 'ael'</div>
-    <br>
-    <button onclick="speak()">🔊 Pronunciation Suno</button>
-    <button onclick="startRecording()">🎤 Repeat Karo</button>
-    <p id="result" style="font-size: 20px; font-weight: bold;"></p>
-  </div>
 
-  <script>
-    function speak() {
-      const msg = new SpeechSynthesisUtterance("A for Apple. Repeat after me: Apple");
-      msg.lang = "en-US";
-      window.speechSynthesis.speak(msg);
+<h1>👩‍🏫 My English Teacher AI</h1>
+<p>Tumhari Personal English Teacher</p>
+
+<div class="menu">
+    <button onclick="startLesson('alphabets')">1. A to Z</button>
+    <button onclick="startLesson('questions')">2. Questions</button>
+    <button onclick="startLesson('grammar')">3. Grammar</button>
+    <button onclick="startLesson('leave')">4. Leave Letter</button>
+</div>
+
+<div id="result">Menu se koi lesson chuno 👆</div>
+<div class="progress" id="progress"></div>
+<button onclick="startRecording()">🎙️ Speak Now</button>
+<button onclick="repeatSentence()">🔊 Repeat</button>
+
+<script>
+let mode = "";
+let currentIndex = 0;
+let lastSentence = "";
+let userData = {};
+
+// 1. A TO Z DATA
+const alphabets = [
+    {word: "apple", sentence: "A for Apple"}, {word: "ball", sentence: "B for Ball"},
+    {word: "cat", sentence: "C for Cat"}, {word: "dog", sentence: "D for Dog"},
+    {word: "elephant", sentence: "E for Elephant"}, {word: "fish", sentence: "F for Fish"},
+    {word: "goat", sentence: "G for Goat"}, {word: "hat", sentence: "H for Hat"},
+    {word: "ice", sentence: "I for Ice"}, {word: "jug", sentence: "J for Jug"},
+    {word: "kite", sentence: "K for Kite"}, {word: "lion", sentence: "L for Lion"},
+    {word: "monkey", sentence: "M for Monkey"}, {word: "nest", sentence: "N for Nest"},
+    {word: "orange", sentence: "O for Orange"}, {word: "parrot", sentence: "P for Parrot"},
+    {word: "queen", sentence: "Q for Queen"}, {word: "rat", sentence: "R for Rat"},
+    {word: "sun", sentence: "S for Sun"}, {word: "tiger", sentence: "T for Tiger"},
+    {word: "umbrella", sentence: "U for Umbrella"}, {word: "van", sentence: "V for Van"},
+    {word: "watch", sentence: "W for Watch"}, {word: "xray", sentence: "X for X-ray"},
+    {word: "yoyo", sentence: "Y for Yo-yo"}, {word: "zebra", sentence: "Z for Zebra"}
+];
+
+// 2. QUESTIONS DATA
+const questions = [
+    {q: "What is your name?", key: "name", correct: "My name is"},
+    {q: "What is your father name?", key: "father", correct: "My father name is"},
+    {q: "What is your mother name?", key: "mother", correct: "My mother name is"},
+    {q: "What is your school name?", key: "school", correct: "My school name is"},
+    {q: "In which class do you study?", key: "class", correct: "I study in class"}
+];
+
+// 3. GRAMMAR DATA
+const grammar = [
+    {wrong: "I am go to school", right: "I go to school"},
+    {wrong: "She is reading a book", right: "She is reading a book"},
+    {wrong: "He don't like mango", right: "He doesn't like mango"},
+    {wrong: "We was playing", right: "We were playing"},
+    {wrong: "They is my friends", right: "They are my friends"}
+];
+
+// 4. LEAVE LETTER
+const leaveLetter = "Respected Sir, I am not able to come to school today because I am ill. Kindly grant me leave for one day. Thank you. Your obedient student.";
+
+function speak(text) {
+    lastSentence = text;
+    const msg = new SpeechSynthesisUtterance(text);
+    msg.lang = 'en-US'; msg.rate = 0.9; msg.pitch = 1.1;
+    window.speechSynthesis.speak(msg);
+}
+
+function repeatSentence() {
+    if(lastSentence) speak(lastSentence);
+}
+
+function startLesson(selectedMode) {
+    mode = selectedMode;
+    currentIndex = 0;
+    if(mode === 'alphabets') {
+        speak("Let's start A to Z. Say " + alphabets[currentIndex].sentence);
+        document.getElementById("result").innerText = "Say: " + alphabets[currentIndex].sentence;
+        document.getElementById("progress").innerText = `Word ${currentIndex + 1} of 26`;
     }
-    function startRecording() {
-      function speak(text) {
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = 'en-US';
-    speech.rate = 0.9;
-    speech.pitch = 1.1;
-    window.speechSynthesis.speak(speech);
+    if(mode === 'questions') {
+        speak("Now I will ask you some questions. " + questions[currentIndex].q);
+        document.getElementById("result").innerText = "Q: " + questions[currentIndex].q;
+    }
+    if(mode === 'grammar') {
+        speak("Find the mistake. " + grammar[currentIndex].wrong);
+        document.getElementById("result").innerText = "Find mistake: " + grammar[currentIndex].wrong;
+        document.getElementById("progress").innerText = `Sentence ${currentIndex + 1} of 5`;
+    }
+    if(mode === 'leave') {
+        speak("This is how we write leave letter. Listen carefully.");
+        speak(leaveLetter);
+        document.getElementById("result").innerText = leaveLetter;
+    }
 }
-      const recognition = new webkitSpeechRecognition();
-      function speak(text) {
-    const speech = new SpeechSynthesisUtterance(text);
-    speech.lang = 'en-US';
-    speech.rate = 0.9;
-    speech.pitch = 1.1;
-    window.speechSynthesis.speak(speech);
-}
-      recognition.lang = "en-US";
-      recognition.onresult = function(event) {
+
+function startRecording() {
+    const recognition = new webkitSpeechRecognition();
+    recognition.lang = "en-US";
+    recognition.onresult = function(event) {
         const result = event.results[0][0].transcript.toLowerCase();
-        if(result.includes("apple")) 
-          if(result.includes("apple"))
-    document.getElementById("result").innerText = "Excellent! 100% ✅";
-} else {
-    document.getElementById("result").innerText = "Try again. Say Aaa-pple ❌";
-}
-          document.getElementById("result").innerText = "Excellent! 100% ✅";
-        } else {
-          document.getElementById("result").innerText = "Try again. Say Aaa-pple ❌";
-        }
-      };
-      recognition.start();
+        checkAnswer(result);
     }
-      </script>
-  <!-- Ad Space -->
- <div style="text-align:center; margin:30px 0; padding:15px; background:#f5f5f5; border-radius:8px;">
-   <p>Yaha baad me Google Ad aayega</p>
-  </div>
-  </body>
-  </html>
+    recognition.start();
+    document.getElementById("result").innerText = "Listening...";
+    setTimeout(() => { recognition.stop(); }, 5000);
+}
+
+function checkAnswer(result) {
+    if(mode === 'alphabets') {
+        const currentWord = alphabets[currentIndex].word;
+        if(result.includes(currentWord)) {
+            speak("Excellent! " + alphabets[currentIndex].sentence);
+            currentIndex++;
+            if(currentIndex < alphabets.length) {
+                document.getElementById("result").innerText = "Excellent! Now say: " + alphabets[currentIndex].sentence;
+                document.getElementById("progress").innerText = `Word ${currentIndex + 1} of 26`;
+                setTimeout(() => { speak("Now say " + alphabets[currentIndex].sentence); }, 1500);
+            } else {
+                speak("Congratulations! You completed A to Z!");
+                document.getElementById("result").innerText = "🎉 A to Z Completed!";
+            }
+        } else {
+            speak("Try again. " + alphabets[currentIndex].sentence);
+            document.getElementById("result").innerText = "Try again. Say: " + alphabets[currentIndex].sentence + " ❌";
+        }
+    }
+
+    if(mode === 'questions') {
+        userData[questions[currentIndex].key] = result;
+        speak("Good. " + questions[currentIndex].correct + " + result);
+        currentIndex++;
+        if(currentIndex < questions.length) {
+            setTimeout(() => {
+                speak(questions[currentIndex].q);
+                document.getElementById("result").innerText = "Q: " + questions[currentIndex].q;
+            }, 2000);
+        } else {
+            speak("Very good! You answered all questions.");
+            document.getElementById("result").innerText = "All questions done! Your answers: " + JSON.stringify(userData);
+        }
+    }
+
+    if(mode === 'grammar') {
+        if(result.includes(grammar[currentIndex].right.toLowerCase())) {
+            speak("Correct! " + grammar[currentIndex].right);
+            currentIndex++;
+            if(currentIndex < grammar.length) {
+                setTimeout(() => {
+                    speak("Next. Find mistake. " + grammar[currentIndex].wrong);
+                    document.getElementById("result").innerText = "Find mistake: " + grammar[currentIndex].wrong;
+                    document.getElementById("progress").innerText = `Sentence ${currentIndex + 1} of 5`;
+                }, 2000);
+            } else {
+                speak("Well done! Grammar completed.");
+                document.getElementById("result").innerText = "🎉 Grammar Completed!";
+            }
+        } else {
+            speak("Wrong. Correct sentence is " + grammar[currentIndex].right);
+            document.getElementById("result").innerText = "Wrong ❌ Correct: " + grammar[currentIndex].right;
+        }
+    }
+}
+</script>
+
+</body>
+</html>
