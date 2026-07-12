@@ -209,3 +209,30 @@ document.getElementById("progress").innerText = `Sentence ${currentIndex + 1} of
 
 </body>
 </html>
+const lessons = {
+  grammar: [
+    "She don't like apples",
+    "I am go to market", 
+    "He have two car",
+    "They is playing cricket",
+    "We was late yesterday"
+  ]
+};
+
+let currentLesson = '';
+let currentIndex = 0;
+
+function selectLesson(lesson) {
+  currentLesson = lesson;
+  currentIndex = 0;
+  document.getElementById("progress").innerText = `Sentence ${currentIndex + 1} of 5`;
+  document.getElementById("result").innerText = lessons[lesson][currentIndex];
+  speak(lessons[lesson][currentIndex]);
+}
+
+function speak(text) {
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = 'en-US';
+  speech.rate = 0.8;
+  window.speechSynthesis.speak(speech);
+}
