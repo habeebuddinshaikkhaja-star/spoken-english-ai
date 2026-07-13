@@ -1,17 +1,28 @@
-lib/
- ├── main.dart
- ├── app.dart
- ├── core/
- ├── models/
- ├── services/
- ├── screens/
- │    ├── splash/
- │    ├── onboarding/
- │    ├── home/
- │    ├── ai_chat/
- │    ├── speaking/
- │    ├── grammar/
- │    ├── vocabulary/
- │    ├── profile/
- ├── widgets/
- └── utils/
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'SpeakNova AI',
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('SpeakNova AI'),
+        ),
+        body: const Center(
+          child: Text(
+            'Welcome to SpeakNova AI',
+            style: TextStyle(fontSize: 24),
+          ),
+        ),
+      ),
+    );
+  }
+}
