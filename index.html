@@ -1,106 +1,17 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>AI English Teacher - Auto Speak</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-body{background:linear-gradient(135deg,#667eea,#764ba2);color:white;text-align:center;font-family:Arial;padding:15px;margin:0}
-h1{margin-bottom:5px;font-size:24px}
-p{margin-top:0;margin-bottom:15px}
-button{padding:12px 16px;margin:6px;border:none;border-radius:20px;background:#4CAF50;color:white;font-size:15px;cursor:pointer;font-weight:bold;transition:0.2s}
-button:hover{background:#45a049;transform:scale(1.05)}
-.orange{background:#ff5722!important}
-.purple{background:#9C27B0!important}
-#result{background:rgba(255,255,255,0.25);padding:20px;border-radius:15px;margin:15px auto;max-width:650px;font-size:22px;min-height:70px;display:flex;align-items:center;justify-content:center}
-#progress{font-size:15px;margin-bottom:10px;font-weight:bold}
-.row{display:flex;flex-wrap:wrap;justify-content:center}
-</style>
-</head>
-<body>
-
-<h1>🤖 AI English Teacher</h1>
-<p>Tumhari Personal Lady Teacher 💁‍♀️</p>
-
-<div class="row">
-<button onclick="playLesson('intro')">Introduction</button>
-<button onclick="playLesson('capital')">Capital A-Z</button>
-<button onclick="playLesson('small')">Small a-z</button>
-</div>
-
-<div class="row">
-<button onclick="playLesson('vowels')">Vowels</button>
-<button onclick="playLesson('consonants')">Consonants</button>
-<button onclick="playLesson('articles')">Articles</button>
-</div>
-
-<div class="row">
-<button class="purple" onclick="playLesson('pos')">Parts of Speech</button>
-<button class="purple" onclick="playLesson('tenses')">Tenses</button>
-<button class="purple" onclick="playLesson('sentences')">Sentence Making</button>
-</div>
-
-<div id="progress">Koi bhi button press karo 👇</div>
-<div id="result">Welcome! Choose any lesson</div>
-
-<button class="orange" onclick="next()">➡️ Next</button>
-<button class="orange" onclick="stopSpeak()">⏹️ Stop</button>
-
-<script>
-let currentLesson=null;
-let currentIndex=0;
-let voices=[];
-
-function loadVoices(){voices=window.speechSynthesis.getVoices();}
-loadVoices();
-window.speechSynthesis.onvoiceschanged=loadVoices;
-
-const lessons={
-intro:["Introduction: There are 26 alphabets. They are 2 types of alphabets. 1) Capital letters. 2) Small letters."],
-capital:["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"],
-small:["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"],
-vowels:["Vowels: They are 5 vowels. A, E, I, O, U"],
-consonants:["Consonants: They are 21 consonants. B, C, D, F, G, H, J, K, L, M, N, P, Q, R, S, T, V, W, X, Y, Z"],
-articles:["Articles: They are 3 articles. A, An, The"],
-pos:["Parts of Speech: There are 8 parts of speech. Noun, Pronoun, Verb, Adjective, Adverb, Preposition, Conjunction, Interjection"],
-tenses:["Tenses: There are 3 main tenses. Present Tense, Past Tense, Future Tense"],
-sentences:["Sentence Making: I am going to school.","She is reading a book.","They will play cricket tomorrow.","We ate dinner yesterday.","He can speak English."]
-};
-
-function playLesson(lesson){
-window.speechSynthesis.cancel();
-currentLesson=lesson;
-currentIndex=0;
-document.getElementById("progress").innerText="Item "+(currentIndex+1)+" of "+lessons[lesson].length;
-document.getElementById("result").innerText=lessons[lesson][currentIndex];
-speakNow();
-}
-
-function next(){
-if(currentLesson==null){alert("Pehle koi lesson chuno");return;}
-window.speechSynthesis.cancel();
-currentIndex++;
-if(currentIndex>=lessons[currentLesson].length)currentIndex=0;
-document.getElementById("progress").innerText="Item "+(currentIndex+1)+" of "+lessons[currentLesson].length;
-document.getElementById("result").innerText=lessons[currentLesson][currentIndex];
-speakNow();
-}
-
-function speakNow(){
-if(currentLesson==null)return;
-let text=lessons[currentLesson][currentIndex];
-let speech=new SpeechSynthesisUtterance(text);
-speech.lang="en-US";
-speech.pitch=1.5; // Lady voice
-speech.rate=0.9;
-let girlVoice=voices.find(v=>v.name.includes("Female")||v.name.includes("Google US English Female")||v.name.includes("Samantha")||v.name.includes("Zira"));
-if(girlVoice)speech.voice=girlVoice;
-window.speechSynthesis.speak(speech);
-}
-
-function stopSpeak(){
-window.speechSynthesis.cancel();
-}
-</script>
-
-</body>
-</html>
+lib/
+ ├── main.dart
+ ├── app.dart
+ ├── core/
+ ├── models/
+ ├── services/
+ ├── screens/
+ │    ├── splash/
+ │    ├── onboarding/
+ │    ├── home/
+ │    ├── ai_chat/
+ │    ├── speaking/
+ │    ├── grammar/
+ │    ├── vocabulary/
+ │    ├── profile/
+ ├── widgets/
+ └── utils/
